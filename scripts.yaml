@@ -1,0 +1,13 @@
+'1515835053999':
+  alias: speedtest manual
+  sequence:
+  - data: {}
+    service: sensor.update_speedtest
+spotifydemo:
+  alias: Spotify Demo
+  sequence:
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.spotify
+      media_content_id: spotify:user:spotify:playlist:3PKnicgXt6cQndOeTbH7Xt
+      media_content_type: playlist

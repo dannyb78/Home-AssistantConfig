@@ -1,0 +1,70 @@
+# Xbox One
+# - platform: xbox_live
+#  api_key:!secret xbox_daniele_api_key
+#  xuid: !secret xbox_daniele_xuid
+#  xuid: !secret xbox_ale_xuid
+# Minecraft
+# - platform: minecraft
+#  name: Minecraft
+#  server: 127.0.0.1
+# Meteo
+# Dark Sky
+- platform: time_date
+  name: time
+  display_options:
+    - 'time'
+- platform: darksky
+  api_key: !secret darksky_api_key
+#  lang: it
+  monitored_conditions:
+    - summary
+    - icon
+    - temperature
+    - wind_speed
+    - humidity
+    - pressure
+    - daily_summary
+# Speedtest
+- platform: speedtest
+  icon: mdi:web
+  server_id: 6483
+  hour:
+    - 1
+    - 7
+    - 12
+    - 21
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+# Transmission Torrent
+- platform: transmission
+  host: 192.168.1.100
+  monitored_variables:
+    - 'current_status'
+    - 'download_speed'
+    - 'upload_speed'
+    - 'active_torrents'
+  username: !secret transmission_username
+  password: !secret transmission_password
+# Server Monitor
+- platform: cpuspeed
+- platform: systemmonitor
+  resources:
+    - type: processor_use
+    - type: since_last_boot
+    - type: memory_use_percent
+    - type: swap_use_percent
+    - type: disk_use_percent
+      arg: /home
+    - type: disk_use_percent
+      arg: /storage
+    - type: disk_use_percent
+      arg: /SerieTV
+    - type: disk_use_percent
+      arg: /Download
+- platform: nut
+  resources:
+    - ups.load
+    - input.voltage
+    - battery.runtime

@@ -1,0 +1,155 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Casa
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 15
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Rome
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  ssl_certificate: !secret ssl_certificate
+  ssl_key: !secret ssl_key
+  base_url: !secret base_url
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Text to speech
+tts:
+  - platform: google
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+
+# Cloud
+cloud:
+
+#alarm panel
+alarm_control_panel: !include alarm.yaml
+panel_custom: !include panel_custom.yaml
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+sensor: !include sensors.yaml
+binary_sensor: !include binary_sensors.yaml
+light: !include lights.yaml
+
+# Z-Wave
+zwave:
+  usb_path: /dev/ttyACM0
+  network_key: !secret network_key
+
+# Presence Detection
+mqtt:
+  broker: 127.0.0.1
+  port: 1884
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+zone: !include zones.yaml
+
+device_tracker:
+  - platform: owntracks
+    max_gps_accuracy: 200
+
+  - platform: nmap_tracker
+    hosts: 192.168.1.0/24
+    home_interval: 10
+
+# Notifiche
+notify:
+  - name: pushbullet
+    platform: pushbullet
+    api_key: !secret ha_pushbullet_api_key
+  - name: keypad
+    platform: lannouncer
+    host: 192.168.1.210
+
+# Media Players
+media_player:
+  - platform: plex
+    entity_namespace: 'plex'
+    include_non_clients: true
+    scan_interval: 5
+    show_all_controls: false
+    use_custom_entity_ids: true
+    use_episode_art: true
+#  - platform: spotify
+#    name: spotify ale
+#    cache_path: '.spotify_ale'
+#    client_id: 686c5f6c4c35401a99fb9eb547a24126
+#    client_secret: 1338b64edcb041e9b87f22047cdad8d8
+#  - platform: spotify
+#    name: spotify daniele
+#    cache_path: '.spotify_daniele'
+#    client_id: 9ff8a43d6852458394ec75596fad3b15
+#    client_secret: d9405590910c4e5bae10670c51d7e2f0
+#    aliases:
+#        abc123def456: 'Living Room'
+#        9183abas000: 'Bed Room'
+
+# CAMERA CONFIGURATION
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+android_ip_webcam:
+  - host: 192.168.1.210
+    name: garage
+    username: homeassistant
+    password: password
+    scan_interval: '8'
+    switches:
+      - video_recording
+      - night_vision
+  - host: 192.168.1.211
+    name: keypad
+    username: homeassistant
+    password: password
+    scan_interval: '8'
+    switches:
+      - video_recording
+      - night_vision

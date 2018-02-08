@@ -1,0 +1,13 @@
+binary_sensor.sensative_sala_sensor:
+  device_class: window
+binary_sensor.sensative_cucina_sensor:
+  device_class: door
+binary_sensor.z120_corridoio_sensor:
+  device_class: motion
+binary_sensor.z110_portone_sensor:
+  device_class: door
+sensor.z120_corridoio_luminance: {}
+binary_sensor.camera_sensor:
+  device_class: motion
+binary_sensor.camerina_sensor:
+  device_class: motion

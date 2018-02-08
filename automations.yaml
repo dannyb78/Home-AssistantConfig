@@ -1,0 +1,176 @@
+- action:
+  - data_template:
+      title: New Home Assistant Release
+      message: Home Assistant  {{ states.updater.updater.state }}  is now available.
+    service: notify.pushbullet
+  alias: Update notifications
+  trigger:
+    platform: state
+    entity_id: updater.updater
+- action:
+  - data:
+      message: Ale è arrivato a scuola
+    service: notify.pushbullet
+  alias: Ale a scuola
+  condition:
+  - after: 07:30:00
+    before: '10:00:00'
+    condition: time
+  id: '1515709998611'
+  trigger:
+  - entity_id: device_tracker.ale
+    event: enter
+    platform: zone
+    zone: zone.liceo
+- action:
+  - data:
+      message: Non c'è nessuno in casa, vuoi inserire l'allarme?
+      target:
+      - channel/casaborghesi
+    service: notify.pushbullet
+  alias: promemoria inserimento allarme
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.allarme
+    state: disarmed
+  id: '1516544401746'
+  trigger:
+  - entity_id: group.famiglia
+    for:
+      minutes: 10
+    from: home
+    platform: state
+    to: not_home
+- id: alarm_armed_away
+  alias: '[Alarm] Away Mode Armed'
+  trigger:
+  - entity_id: alarm_control_panel.allarme
+    platform: state
+    to: armed_away
+  action:
+  - data:
+      message: Alarm Away Mode Armed
+      target: channel/casaborghesi
+    service: notify.pushbullet
+  - data:
+      message: Allarme attivato in modalità fuori casa.
+    service: notify.keypad
+- id: alarm_armed_home
+  alias: '[Alarm] Home Mode Armed'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.allarme
+    to: armed_home
+  action:
+  - data:
+      message: Alarm Home Mode Armed
+      target: channel/casaborghesi
+    service: notify.pushbullet
+  - data:
+      message: Allarme attivato in modalità in casa.
+    service: notify.keypad
+- id: alarm_arming_away
+  alias: '[Alarm] Away Mode Arming'
+  trigger:
+  - entity_id: alarm_control_panel.allarme
+    platform: state
+    to: pending
+  action:
+  - data:
+      message: Allarme in attivazione, assicurati di aver chiuso porte e finestre.
+    service: notify.keypad
+- id: alarm_disarmed
+  alias: '[Alarm] Disarmed'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.allarme
+    to: disarmed
+  action:
+  - data:
+      message: Alarm Disabled
+      target: channel/casaborghesi
+    service: notify.pushbullet
+  - data:
+      message: Allarme disattivato.
+    service: notify.keypad
+  - service: switch.turn_off
+    entity_id: switch.Z510_switch
+- id: alarm_triggered
+  alias: '[Alarm] Triggered'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.allarme
+    to: triggered
+  action:
+  - service: switch.turn_on
+    entity_id: switch.Z510_switch
+  - data:
+      message: ALARM TRIGGERED!!! {{ states[states.alarm_control_panel.allarme.attributes.changed_by.split(".")[0]][
+        states.alarm_control_panel.allarme.attributes.changed_by.split(".")[1]].name
+        }}
+      target: channel/casaborghesi
+    service: notify.pushbullet
+- id: alarm_warning
+  alias: '[Alarm] Warning'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.allarme
+    to: warning
+  action:
+  - data:
+      message: ALARM Warning {{ states[states.alarm_control_panel.allarme.attributes.changed_by.split(".")[0]][
+        states.alarm_control_panel.allarme.attributes.changed_by.split(".")[1]].name
+        }}
+      target: channel/casaborghesi
+    service: notify.pushbullet
+  - data:
+      message: Hello, the house alarm has been tripped. Please deactivate
+    service: notify.keypad
+- action:
+  - data:
+      brightness: 100
+      entity_id: light.camerina
+      kelvin: 2700
+    service: light.turn_on
+  alias: sveglia edo
+  condition:
+  - condition: state
+    entity_id: light.camerina
+    state: 'off'
+  id: '1517518023552'
+  trigger:
+  - at: 07:00
+    platform: time
+- action:
+  - data:
+      entity_id: light.camerina
+    service: light.turn_on
+  alias: Luce camerina on
+  condition:
+  - condition: state
+    entity_id: light.camerina
+    state: 'off'
+  - below: '5'
+    condition: numeric_state
+    entity_id: sensor.camerina_luminance
+  id: '1518026589676'
+  trigger:
+  - entity_id: binary_sensor.camera_sensor
+    platform: state
+    to: 'on'
+- action:
+  - data:
+      entity_id: light.camerina
+    service: light.turn_off
+  alias: Luce camerina off
+  condition:
+  - condition: state
+    entity_id: light.camerina
+    state: 'on'
+  id: '1518027180163'
+  trigger:
+  - entity_id: binary_sensor.camera_sensor
+    platform: state
+    to: 'off'
+    for:
+      minutes: 2

@@ -1,0 +1,26 @@
+#IPcam Moving
+# Keypad scale
+- platform: rest
+  name: mov_scale
+  device_class: motion
+  resource: http://192.168.1.211:8080/sensors.json?sense=motion_active
+  value_template: '{{ value_json.motion_active.data[0][1][0] | round(0) }}'
+# Keypad garage
+- platform: rest
+  name: mov_garage
+  device_class: motion
+  resource: http://192.168.1.210:8080/sensors.json?sense=motion_active
+  value_template: '{{ value_json.motion_active.data[0][1][0] | round(0) }}'
+#IPCam sound
+# Keypad scale
+- platform: rest
+  name: sound_scale
+  device_class: sound
+  resource: http://192.168.1.211:8080/sensors.json?sense=sound_timeout
+  value_template: '{{ value_json.sound_timeout.data[0][1][0] | round(0) }}'
+# Keypad garage
+- platform: rest
+  name: sound_garage
+  device_class: sound
+  resource: http://192.168.1.210:8080/sensors.json?sense=sound_timeout
+  value_template: '{{ value_json.sound_timeout.data[0][1][0] | round(0) }}'
